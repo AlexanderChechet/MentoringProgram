@@ -9,60 +9,104 @@ namespace Task6
 {
     class Program
     {
-        public static List<string> sharedCollection = new List<string>();
-        public static ManualResetEventSlim addEventSlim = new ManualResetEventSlim(false);
-        public static ManualResetEventSlim printEventSlim = new ManualResetEventSlim(true);
-        public static object lockObject = new object();
+        private static List<string> sharedCollection = new List<string>();
+        private static readonly ManualResetEventSlim addEventSlim = new ManualResetEventSlim(false);
+        private static readonly ManualResetEventSlim printEventSlim = new ManualResetEventSlim(true);
+        private static readonly object lockObject = new object();
 
         static void Main(string[] args)
         {
-            var firstThread = new Thread(DoFirstWork);
-            var secondThread = new Thread(DoSecondWork);
-            secondThread.Start();
-            firstThread.Start();
+            TaskFlow();
+            //ThreadFlow();
             Console.WriteLine("Main thread ends");
             Console.ReadKey();
         }
 
-        public static void DoFirstWork()
+        #region Thread implementation
+        private static void ThreadFlow()
+        {
+            var firstThread = new Thread(DoFirstThreadWork);
+            var secondThread = new Thread(DoSecondThreadWork);
+            secondThread.Start();
+            firstThread.Start();
+        }
+
+        private static void DoFirstThreadWork()
         {
             for (int i = 0; i < 10; i++)
             {
-                lock (lockObject)
-                {
-                    sharedCollection.Add(i.ToString());
-                    addEventSlim.Set();
-                }
+                AddItem(sharedCollection, i.ToString());
+                addEventSlim.Set();
                 //TODO: Think on implementation without sleep;
-                Thread.Sleep(100);
+                //Thread.Sleep(100);
             }
             printEventSlim.Reset();
             Console.WriteLine("First thread end");
         }
 
-        public static void DoSecondWork()
+        private static void DoSecondThreadWork()
         {
             while (printEventSlim.IsSet)
             {
                 if (addEventSlim.Wait(1000))
                 {
-                    lock (lockObject)
-                    {
-                        PrintCollection(sharedCollection);
-                        Console.WriteLine("Add Event Reset");
-                        addEventSlim.Reset();
-                    }
+                    addEventSlim.Reset();
+                    PrintCollection(sharedCollection);
                 }
             }
             Console.WriteLine("Second thread end");
         }
 
-        private static void PrintCollection(IEnumerable<object> collection)
+        #endregion
+
+
+        #region Task implementation
+        private static void TaskFlow()
         {
-            foreach (var item in collection)
+            for (int i = 0; i < 10; i++)
             {
-                Console.Write(item.ToString() + " ");
+                var addAndPrintTask = Task.Factory.StartNew(DoFirstTaskWork, i)
+                    .ContinueWith(DoSecondTaskWork);
+                Task.WaitAll(addAndPrintTask);
             }
         }
+
+        private static void DoFirstTaskWork(object state)
+        {
+            var item = state.ToString();
+            AddItem(sharedCollection, item);
+        }
+
+        private static void DoSecondTaskWork(Task task)
+        {
+            PrintCollection(sharedCollection);
+        }
+
+        #endregion
+
+
+        #region Collection actions
+        private static void AddItem(List<string> collection, string item)
+        {
+            lock (lockObject)
+            {
+                collection.Add(item);
+            }
+        }
+
+        private static void PrintCollection(List<string> collection)
+        {
+            lock (lockObject)
+            {
+                foreach (var item in collection)
+                {
+                    Console.Write(item + " ");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        #endregion
+
     }
 }
