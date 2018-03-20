@@ -12,24 +12,37 @@ namespace Task7
     {
         static void Main(string[] args)
         {
-            
-
-            Console.WriteLine("End");
-            Console.ReadKey();
-        }
-
-        private static void CaseA()
-        {
-            Console.WriteLine("Case A");
             var cancellationTokenSource = new CancellationTokenSource();
-            var caseATask = Task.Run((Action)SimpleWriteline, cancellationTokenSource.Token)
-                .ContinueWith(task => Continuation());
-            cancellationTokenSource.Cancel();
+            Console.WriteLine("Enter option");
+            var option = Console.ReadLine();
             try
             {
-                caseATask.Wait(cancellationTokenSource.Token);
+                var task = CreateTask(option, cancellationTokenSource.Token);
+                Console.WriteLine("Create and start Task");
+                //Console.WriteLine("Cancel task");
+                //cancellationTokenSource.Cancel();
+                task.Wait(cancellationTokenSource.Token);
+                Console.WriteLine("End Task");
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e.Message);
             }
             catch (OperationCanceledException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            catch (AggregateException list)
+            {
+                foreach (var ex in list.InnerExceptions)
+                {
+                    if (ex is TaskCanceledException)
+                        Console.WriteLine(ex.Message);
+                    else
+                        Console.WriteLine(ex.Message + " " + ex);
+                }
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message + " " + e);
             }
@@ -37,47 +50,72 @@ namespace Task7
             {
                 cancellationTokenSource.Dispose();
             }
-            Console.WriteLine("End case A");
+            
+            Console.ReadKey();
         }
 
-        private static void CaseB()
+        private static Task CreateTask(string option, CancellationToken token)
         {
-            Console.WriteLine("Case B");
-            var caseBTask = Task.Run((Action)SimpleWriteline)
-                .ContinueWith(task => Continuation(), TaskContinuationOptions.NotOnRanToCompletion);
-            try
+            Task result = null;
+            switch (option)
             {
-                caseBTask.Wait();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message + " " + e);
-            }
-            Console.WriteLine("End case B");
+                case "A":
+                    Console.WriteLine("Regardless execution");
+                    result = CaseA(token);
+                    break;
+                case "B":
+                    Console.WriteLine("Without success execution");
+                    result = CaseB(token);
+                    break;
+                case "C":
+                    Console.WriteLine("Fail and same thread execution");
+                    result = CaseC(token);
+                    break;
+                case "D":
+                    Console.WriteLine("Out of thread on cancel execution");
+                    result = CaseD(token);
+                    break;
+                default:
+                    throw new ArgumentException("Wrong case");
+            }   
+            return result;
         }
 
-        private static void CaseC()
+        private static Task CaseA(CancellationToken token)
         {
-            //TO DO Execute in correct thread
-            Console.WriteLine("Case B");
-            var caseBTask = Task.Run((Action)SimpleWriteline)
-                .ContinueWith(task =>TaskContinuationOptions.OnlyOnFaulted);
-            try
-            {
-                caseBTask.Wait();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message + " " + e);
-            }
-            Console.WriteLine("End case B");
+            var task = Task.Run((Action)SimpleWriteline, token)
+                .ContinueWith(x => Continuation());
+            return task;   
+        }
+
+        private static Task CaseB(CancellationToken token)
+        {
+            var task = Task.Run((Action)SimpleWriteline)
+                .ContinueWith(x => Continuation(), TaskContinuationOptions.NotOnRanToCompletion);
+            return task;
+        }
+
+        private static Task CaseC(CancellationToken token)
+        {
+            var task = Task.Factory.StartNew(SimpleWriteline)
+                .ContinueWith(x => Continuation(), TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously);
+            return task;
+        }
+
+        private static Task CaseD(CancellationToken token)
+        {
+            token.Register(Continuation, false);
+            var task = Task.Factory.StartNew(SimpleWriteline)
+                .ContinueWith(x => Continuation(), token);
+            return task;
         }
 
         private static void SimpleWriteline()
         {
             Console.WriteLine("Parent task start");
             Console.WriteLine($"Thread Id: {Thread.CurrentThread.ManagedThreadId}");
-            throw new NullReferenceException();
+            //Console.WriteLine("Throw exception");
+            //throw new NullReferenceException();
             Console.WriteLine("Parent task end");
         }
 
