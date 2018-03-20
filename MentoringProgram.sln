@@ -3,8 +3,35 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Multithreading", "Multithreading", "{93154CAD-0952-4DA8-ACB7-E6E8DF3F4E05}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Task2", "Task2", "{15AF1C56-6CE5-4A2A-9BA9-9CCB7BEF6D08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerConsole", "Multithreading\ServerConsole\ServerConsole.csproj", "{3937FB7B-0D31-4A04-B181-5F0BE9FBF17A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientConsole", "Multithreading\ClientConsole\ClientConsole.csproj", "{B9A93DC8-83B2-42F2-A389-360F992C9500}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3937FB7B-0D31-4A04-B181-5F0BE9FBF17A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3937FB7B-0D31-4A04-B181-5F0BE9FBF17A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3937FB7B-0D31-4A04-B181-5F0BE9FBF17A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3937FB7B-0D31-4A04-B181-5F0BE9FBF17A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9A93DC8-83B2-42F2-A389-360F992C9500}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9A93DC8-83B2-42F2-A389-360F992C9500}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9A93DC8-83B2-42F2-A389-360F992C9500}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9A93DC8-83B2-42F2-A389-360F992C9500}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{15AF1C56-6CE5-4A2A-9BA9-9CCB7BEF6D08} = {93154CAD-0952-4DA8-ACB7-E6E8DF3F4E05}
+		{3937FB7B-0D31-4A04-B181-5F0BE9FBF17A} = {15AF1C56-6CE5-4A2A-9BA9-9CCB7BEF6D08}
+		{B9A93DC8-83B2-42F2-A389-360F992C9500} = {15AF1C56-6CE5-4A2A-9BA9-9CCB7BEF6D08}
 	EndGlobalSection
 EndGlobal
