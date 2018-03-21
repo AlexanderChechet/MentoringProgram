@@ -9,15 +9,19 @@ namespace Task6
 {
     class Program
     {
-        private static List<string> sharedCollection = new List<string>();
+        private static readonly List<string> sharedCollection = new List<string>();
         private static readonly ManualResetEventSlim addEventSlim = new ManualResetEventSlim(false);
         private static readonly ManualResetEventSlim printEventSlim = new ManualResetEventSlim(true);
+        private static volatile bool isPrintThreadRequired = true;
         private static readonly object lockObject = new object();
 
         static void Main(string[] args)
         {
+            Console.WriteLine("Task flow");
             TaskFlow();
-            //ThreadFlow();
+            ResetCollection(sharedCollection);
+            Console.WriteLine("Thread flow");
+            ThreadFlow();
             Console.WriteLine("Main thread ends");
             Console.ReadKey();
         }
@@ -35,23 +39,38 @@ namespace Task6
         {
             for (int i = 0; i < 10; i++)
             {
-                AddItem(sharedCollection, i.ToString());
-                addEventSlim.Set();
-                //TODO: Think on implementation without sleep;
-                //Thread.Sleep(100);
+                if (printEventSlim.Wait(1000))
+                {
+                    try
+                    {
+                        printEventSlim.Reset();
+                        AddItem(sharedCollection, i.ToString());
+                    }
+                    finally
+                    {
+                        addEventSlim.Set();
+                    }
+                }
             }
-            printEventSlim.Reset();
+            isPrintThreadRequired = false;
             Console.WriteLine("First thread end");
         }
 
         private static void DoSecondThreadWork()
         {
-            while (printEventSlim.IsSet)
+            while (isPrintThreadRequired)
             {
                 if (addEventSlim.Wait(1000))
                 {
-                    addEventSlim.Reset();
-                    PrintCollection(sharedCollection);
+                    try
+                    {
+                        addEventSlim.Reset();
+                        PrintCollection(sharedCollection);
+                    }
+                    finally
+                    {
+                        printEventSlim.Set();
+                    }
                 }
             }
             Console.WriteLine("Second thread end");
@@ -103,6 +122,15 @@ namespace Task6
                     Console.Write(item + " ");
                 }
                 Console.WriteLine();
+            }
+        }
+
+        private static void ResetCollection(List<string> collection)
+        {
+            lock (lockObject)
+            {
+                Console.WriteLine("Collection reset");
+                collection.Clear();
             }
         }
 
