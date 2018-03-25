@@ -12,16 +12,8 @@ namespace ServerConsole
     {
         static void Main(string[] args)
         {
-            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            var endPoint = new IPEndPoint(IPAddress.Loopback, 100);
-            socket.Bind(endPoint);
-            socket.Listen(4);
-            var client = socket.Accept();
-            Console.WriteLine("Connected");
-            var message = "Hello";
-            var messageArray = Encoding.UTF8.GetBytes(message);
-            Console.WriteLine("Message send");
-            client.Send(messageArray);
+            var server = new Server();
+            server.Start();
             Console.ReadKey();
         }
     }
