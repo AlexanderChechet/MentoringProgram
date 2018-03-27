@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Task7.Command;
 
 namespace Task7
 {
@@ -12,118 +13,58 @@ namespace Task7
     {
         static void Main(string[] args)
         {
-            var cancellationTokenSource = new CancellationTokenSource();
-            Console.WriteLine("Enter option");
-            var option = Console.ReadLine();
+            var command = GetTaskCommand();
+            if (command != null)
+            {
+                using (var cancellationTokenSource = new CancellationTokenSource())
+                {
+                    ExecuteTaskCommand(command, cancellationTokenSource.Token);
+                }
+            }
+            Console.ReadKey();
+        }
+
+        private static ITaskCommand GetTaskCommand()
+        {
+            ITaskCommand result = null;
+            Console.WriteLine("Enter command key");
+            var tcm = new TaskCommandManager();
+            var key = Console.ReadLine();
             try
             {
-                var task = CreateTask(option, cancellationTokenSource.Token);
-                Console.WriteLine("Create and start Task");
-                //Console.WriteLine("Cancel task");
-                //cancellationTokenSource.Cancel();
-                task.Wait(cancellationTokenSource.Token);
-                Console.WriteLine("End Task");
+                result = tcm.GetCommand(key);
             }
             catch (ArgumentException e)
             {
                 Console.WriteLine(e.Message);
             }
-            catch (OperationCanceledException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            catch (AggregateException list)
-            {
-                foreach (var ex in list.InnerExceptions)
-                {
-                    if (ex is TaskCanceledException)
-                        Console.WriteLine(ex.Message);
-                    else
-                        Console.WriteLine(ex.Message + " " + ex);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message + " " + e);
-            }
-            finally
-            {
-                cancellationTokenSource.Dispose();
-            }
-            
-            Console.ReadKey();
-        }
-
-        private static Task CreateTask(string option, CancellationToken token)
-        {
-            Task result = null;
-            switch (option)
-            {
-                case "A":
-                    Console.WriteLine("Regardless execution");
-                    result = CaseA(token);
-                    break;
-                case "B":
-                    Console.WriteLine("Without success execution");
-                    result = CaseB(token);
-                    break;
-                case "C":
-                    Console.WriteLine("Fail and same thread execution");
-                    result = CaseC(token);
-                    break;
-                case "D":
-                    Console.WriteLine("Out of thread on cancel execution");
-                    result = CaseD(token);
-                    break;
-                default:
-                    throw new ArgumentException("Wrong case");
-            }   
             return result;
         }
 
-        private static Task CaseA(CancellationToken token)
+        private static void ExecuteTaskCommand(ITaskCommand command, CancellationToken token)
         {
-            var task = Task.Run((Action)SimpleWriteline, token)
-                .ContinueWith(x => Continuation());
-            return task;   
-        }
-
-        private static Task CaseB(CancellationToken token)
-        {
-            var task = Task.Run((Action)SimpleWriteline)
-                .ContinueWith(x => Continuation(), TaskContinuationOptions.NotOnRanToCompletion);
-            return task;
-        }
-
-        private static Task CaseC(CancellationToken token)
-        {
-            var task = Task.Factory.StartNew(SimpleWriteline)
-                .ContinueWith(x => Continuation(), TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously);
-            return task;
-        }
-
-        private static Task CaseD(CancellationToken token)
-        {
-            token.Register(Continuation, false);
-            var task = Task.Factory.StartNew(SimpleWriteline)
-                .ContinueWith(x => Continuation(), token);
-            return task;
-        }
-
-        private static void SimpleWriteline()
-        {
-            Console.WriteLine("Parent task start");
-            Console.WriteLine($"Thread Id: {Thread.CurrentThread.ManagedThreadId}");
-            //Console.WriteLine("Throw exception");
-            //throw new NullReferenceException();
-            Console.WriteLine("Parent task end");
-        }
-
-        private static void Continuation()
-        {
-            Console.WriteLine("Continuation task start");
-            Console.WriteLine($"Thread Id: {Thread.CurrentThread.ManagedThreadId}");
-            Console.WriteLine("Continuation task end");
+            try
+            {
+                Console.WriteLine("Create and start Task");
+                var task = command.ExecuteCommand(token);
+                task.Wait(token);
+                Console.WriteLine("End Task");
+            }
+            catch (Exception e)
+            {
+                if (e is ArgumentException || e is OperationCanceledException)
+                    Console.WriteLine(e.Message);
+                else if (e is AggregateException)
+                {
+                    foreach (var item in ((AggregateException)e).InnerExceptions)
+                        if (item is OperationCanceledException)
+                            Console.WriteLine(item.Message);
+                        else
+                            Console.WriteLine("Unhandled exception. " + e);
+                }
+                else
+                    Console.WriteLine("Unhandled exception. " + e);
+            }
         }
     }
 }

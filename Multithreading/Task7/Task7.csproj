@@ -42,6 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command\ITaskCommand.cs" />
+    <Compile Include="Command\TaskACommand.cs" />
+    <Compile Include="Command\TaskBCommand.cs" />
+    <Compile Include="Command\TaskCCommand.cs" />
+    <Compile Include="Command\TaskCommandManager.cs" />
+    <Compile Include="Command\TaskDCommand.cs" />
+    <Compile Include="ConsoleActions.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
