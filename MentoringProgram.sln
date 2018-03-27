@@ -11,7 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerConsole", "Multithrea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientConsole", "Multithreading\ClientConsole\ClientConsole.csproj", "{B9A93DC8-83B2-42F2-A389-360F992C9500}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SocketHelper", "SocketHelper\SocketHelper.shproj", "{8FCE36E4-F736-49B2-8393-055479B3080C}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		SocketHelper\SocketHelper.projitems*{3937fb7b-0d31-4a04-b181-5f0be9fbf17a}*SharedItemsImports = 4
+		SocketHelper\SocketHelper.projitems*{8fce36e4-f736-49b2-8393-055479b3080c}*SharedItemsImports = 13
+		SocketHelper\SocketHelper.projitems*{b9a93dc8-83b2-42f2-a389-360f992c9500}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -33,5 +40,6 @@ Global
 		{15AF1C56-6CE5-4A2A-9BA9-9CCB7BEF6D08} = {93154CAD-0952-4DA8-ACB7-E6E8DF3F4E05}
 		{3937FB7B-0D31-4A04-B181-5F0BE9FBF17A} = {15AF1C56-6CE5-4A2A-9BA9-9CCB7BEF6D08}
 		{B9A93DC8-83B2-42F2-A389-360F992C9500} = {15AF1C56-6CE5-4A2A-9BA9-9CCB7BEF6D08}
+		{8FCE36E4-F736-49B2-8393-055479B3080C} = {15AF1C56-6CE5-4A2A-9BA9-9CCB7BEF6D08}
 	EndGlobalSection
 EndGlobal

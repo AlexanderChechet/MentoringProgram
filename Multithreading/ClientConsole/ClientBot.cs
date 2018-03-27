@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SocketHelper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,22 +11,30 @@ namespace ClientConsole
 {
     public class ClientBot : IDisposable
     {
+        private Guid id;
         private Random random;
-        private Socket socket;
+        private Socket inputSocket;
+        private Socket outputSocket;
         private string clienName;
-        private IPEndPoint localEndPoint;
-        private IPEndPoint serverEndPoint;
 
         public ClientBot()
         {
             try
             {
+                id = Guid.NewGuid();
                 random = new Random();
                 clienName = Constants.Names[random.Next(Constants.Names.Length)];
-                socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                localEndPoint = new IPEndPoint(IPAddress.Loopback, 100 + random.Next(100));
-                serverEndPoint = new IPEndPoint(IPAddress.Loopback, 100);
-                socket.Bind(localEndPoint);
+                var port = random.Next(100) + 100;
+                var serverEndPoint = new IPEndPoint(IPAddress.Loopback, 100);
+                //inputSocket
+                inputSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                var localEndPoint = new IPEndPoint(IPAddress.Loopback, port);
+                inputSocket.Bind(localEndPoint);
+                //outputSocket
+                outputSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                localEndPoint = new IPEndPoint(IPAddress.Loopback, port + 1);
+                inputSocket.Bind(localEndPoint);
+
             }
             catch (Exception ex)
             {
@@ -37,8 +46,12 @@ namespace ClientConsole
         {
             try
             {
-                socket.Connect(serverEndPoint);
-                DoWork();
+                var serverEndPoint = new IPEndPoint(IPAddress.Loopback, 100);
+                inputSocket.Connect(serverEndPoint);
+                inputSocket.SendMessage(id.ToString());
+                outputSocket.Connect(serverEndPoint);
+                outputSocket.SendMessage(id.ToString());
+                inputSocket.SendMessage(clienName);
             }
             catch (Exception ex)
             {
@@ -46,44 +59,10 @@ namespace ClientConsole
             }
         }
 
-        private void DoWork()
-        {
-            SendMessage(clienName);
-            RecieveMessage();
-        }
-
-        private void RecieveMessage()
-        {
-            try
-            {
-                byte[] messageArray = new byte[100];
-                var length = socket.Receive(messageArray);
-                var message = Encoding.UTF8.GetString(messageArray);
-                Console.WriteLine(message);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Can't recieve message. ", ex.Message);
-            }
-        }
-
-        private void SendMessage(string message)
-        {
-            try
-            {
-                var messageArray = Encoding.UTF8.GetBytes(message);
-                Console.WriteLine("Message send");
-                socket.Send(messageArray);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Can't send message.", ex.Message);
-            }
-        }
-
         public void Dispose()
         {
-            socket.Close();
+            inputSocket.Close();
+            outputSocket.Close();
         }
     }
 }
