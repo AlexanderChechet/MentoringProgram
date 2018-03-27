@@ -19,6 +19,7 @@ namespace ServerConsole
 
         public Server()
         {
+            socketQueue = new ConcurrentDictionary<Guid, Socket>();
             connectedClients = new ConcurrentDictionary<Guid, Client>();
             server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             endPoint = new IPEndPoint(IPAddress.Loopback, 100);
@@ -45,14 +46,18 @@ namespace ServerConsole
         private void Initialize(Socket socket)
         {
             Socket storedSocket;
-            var stringGuid = socket.RecieveMessage();
+            var stringGuid = socket.RecieveMessage(36);
             var guid = Guid.Parse(stringGuid);
             if (!socketQueue.ContainsKey(guid))
             {
-                socketQueue.TryAdd(guid, socket);
+                if (socketQueue.TryAdd(guid, socket))
+                    Console.WriteLine("Add");
+                else
+                    Console.WriteLine("Add error");
             }
             else
             {
+                Console.WriteLine("Init");
                 socketQueue.TryRemove(guid, out storedSocket);
                 var storedPort = (storedSocket.RemoteEndPoint as IPEndPoint).Port;
                 var port = (socket.RemoteEndPoint as IPEndPoint).Port;

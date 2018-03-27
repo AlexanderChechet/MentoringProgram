@@ -33,7 +33,7 @@ namespace ClientConsole
                 //outputSocket
                 outputSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 localEndPoint = new IPEndPoint(IPAddress.Loopback, port + 1);
-                inputSocket.Bind(localEndPoint);
+                outputSocket.Bind(localEndPoint);
 
             }
             catch (Exception ex)
@@ -51,7 +51,7 @@ namespace ClientConsole
                 inputSocket.SendMessage(id.ToString());
                 outputSocket.Connect(serverEndPoint);
                 outputSocket.SendMessage(id.ToString());
-                inputSocket.SendMessage(clienName);
+                outputSocket.SendMessage(clienName);
             }
             catch (Exception ex)
             {

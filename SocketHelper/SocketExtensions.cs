@@ -7,14 +7,23 @@ namespace SocketHelper
 {
     public static class SocketExtensions
     {
-        public static string RecieveMessage(this Socket socket)
+        public static string RecieveMessage(this Socket socket, int size = 0)
         {
             string result = String.Empty;
             try
             {
-                byte[] messageArray = new byte[100];
-                var length = socket.Receive(messageArray);
-                result = Encoding.UTF8.GetString(messageArray, 0, length);
+                if (size != 0)
+                {
+                    byte[] messageArray = new byte[size];
+                    socket.Receive(messageArray, size, SocketFlags.None);
+                    result = Encoding.UTF8.GetString(messageArray);
+                }
+                else
+                {
+                    byte[] messageArray = new byte[100];
+                    var length = socket.Receive(messageArray);
+                    result = Encoding.UTF8.GetString(messageArray, 0, length);
+                }
                 return result;
             }
             catch (Exception ex)
@@ -29,7 +38,7 @@ namespace SocketHelper
             try
             {
                 var messageArray = Encoding.UTF8.GetBytes(message);
-                socket.Send(messageArray);
+                socket.Send(messageArray, messageArray.Length, SocketFlags.None);
             }
             catch (Exception ex)
             {
