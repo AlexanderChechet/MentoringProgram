@@ -22,6 +22,8 @@ namespace SocketHelper
                 {
                     byte[] messageArray = new byte[100];
                     var length = socket.Receive(messageArray);
+                    if (length == 0)
+                        throw new Exception();
                     result = Encoding.UTF8.GetString(messageArray, 0, length);
                 }
                 return result;
@@ -29,8 +31,8 @@ namespace SocketHelper
             catch (Exception ex)
             {
                 Console.WriteLine("Can't recieve message. ", ex.Message);
+                throw;
             }
-            return result;
         }
 
         public static void SendMessage(this Socket socket, string message)

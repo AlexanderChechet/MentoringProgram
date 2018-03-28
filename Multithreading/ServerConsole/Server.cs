@@ -86,30 +86,33 @@ namespace ServerConsole
         {
             Console.WriteLine("Broadcast:" + message);
             var list = connectedClients.Where(x => x.Key != id).Select(y => y.Value.Output);
-            Parallel.ForEach<Socket>(list, x => x.SendMessage(message));
+            try
+            {
+                Parallel.ForEach<Socket>(list, x => x.SendMessage(message));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Can't broadcast message to all clients. Unhandled exception: " + e);
+            }
+            
         }
-
         private void ProcessClient(Client client)
         {
-            /*var clientName = RecieveMessage(socket);
-            Console.WriteLine(clientName + " Connected");
-            connectedClients.Add(socket, clientName);
-            Broadcast(socket, clientName + "connected");
-            SendMessage(socket, "PROCESSED");
-            if (socket.Connected)
+            while (client.Input.Connected)
             {
                 try
                 {
-                    var message = RecieveMessage(socket);
-                    Broadcast(socket, message);
-                    SendMessage(socket, "PROCESSED");
+                    var message = client.Input.RecieveMessage();
+                    Console.WriteLine($"Message from {client.Name}: {message}");
+                    Broadcast(client.Id, $"{client.Name}: {message}");
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
-                    Console.WriteLine("Can't process cliet message.", ex.Message);
-                } 
+                    Client a;
+                    connectedClients.TryRemove(client.Id, out a);
+                    client.Dispose();
+                }
             }
-            Console.WriteLine(clientName + " Disconnected");*/
         }
 
         

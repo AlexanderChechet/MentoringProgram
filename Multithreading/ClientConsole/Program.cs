@@ -12,10 +12,8 @@ namespace ClientConsole
     {
         static void Main(string[] args)
         {
-            using (var bot = new ClientBot())
-            {
-                bot.Start();
-            }
+            var bot = new ClientBot();
+            bot.Start();
             Console.ReadKey();
         }
     }
