@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomDownloader.cs" />
     <Compile Include="DownloadItem.cs">
       <SubType>UserControl</SubType>
     </Compile>

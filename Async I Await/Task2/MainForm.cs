@@ -19,8 +19,16 @@ namespace Task2
 
         private void addDownloadButton_Click(object sender, EventArgs e)
         {
-            var control = new DownloadItem();
-            downloadListPanel.Container.Add(control);
+            var url = textBox1.Text;
+            if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            {
+                var control = new DownloadItem(url);
+                downloadListPanel.Controls.Add(control);
+            }
+            else
+            {
+                MessageBox.Show("Wrong url", "Wrong url");
+            }
         }
     }
 }
