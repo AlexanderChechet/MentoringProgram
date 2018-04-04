@@ -60,5 +60,46 @@ namespace ShopRepository
             }
         }
 
+        public void CreateUserTable()
+        {
+            using (var dbConnection = new SQLiteConnection(connectionString))
+            {
+                dbConnection.Open();
+
+                //string sqlCreate = "CREATE TABLE Users (id INTEGER PRIMARY KEY AUTOINCREMENT, name NVARCHAR(20), surname NVARCHAR(200), age INTEGER)";
+
+                //var createCommand = new SQLiteCommand(sqlCreate, dbConnection);
+                //createCommand.ExecuteNonQuery();
+
+                var sb = new StringBuilder();
+                sb.Append("INSERT INTO Users (name, surname, age) VALUES");
+                sb.Append("('TestName1', 'TestSurname1', 100),");
+                sb.Append("('TestName2', 'TestSurname2', 200),");
+                sb.Append("('TestName3', 'TestSurname3', 300),");
+                sb.Append("('TestName4', 'TestSurname4', 400),");
+                sb.Append("('TestName5', 'TestSurname5', 500),");
+                sb.Append("('TestName6', 'TestSurname6', 600),");
+                sb.Append("('TestName7', 'TestSurname7', 700),");
+                sb.Append("('TestName8', 'TestSurname8', 800),");
+                sb.Append("('TestName9', 'TestSurname9', 900)");
+
+                var sqlInsert = sb.ToString();
+                var insertCommand = new SQLiteCommand(sqlInsert, dbConnection);
+                insertCommand.ExecuteNonQuery();
+            }
+        }
+
+        public void CreateOrderTable()
+        {
+            using (var dbConnection = new SQLiteConnection(connectionString))
+            {
+                dbConnection.Open();
+
+                string sqlCreate = "CREATE TABLE Orders (id INTEGER PRIMARY KEY AUTOINCREMENT, productId INTEGER, userId INTEGER)";
+
+                var createCommand = new SQLiteCommand(sqlCreate, dbConnection);
+                createCommand.ExecuteNonQuery();
+            }
+        }
     }
 }
