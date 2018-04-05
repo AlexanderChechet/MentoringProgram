@@ -44,11 +44,11 @@ namespace ShopRepository.Users
             using (var dbConnection = new SQLiteConnection(connectionString))
             {
                 List<User> result = new List<User>();
-                await dbConnection.OpenAsync();
+                await dbConnection.OpenAsync().ConfigureAwait(false);
                 var sqlSelect = "SELECT id, name, surname, age FROM Users";
                 var command = new SQLiteCommand(sqlSelect, dbConnection);
-                var reader = await command.ExecuteReaderAsync();
-                while (await reader.ReadAsync())
+                var reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
+                while (await reader.ReadAsync().ConfigureAwait(false))
                 {
                     var user = new User();
                     user.Id = reader.GetInt32(0);

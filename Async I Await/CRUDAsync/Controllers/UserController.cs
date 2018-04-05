@@ -15,7 +15,7 @@ namespace CRUDAsync.Controllers
         public async Task<ActionResult> Index()
         {
             var repo = new UserRepository(dbName);
-            var users = await repo.GetUsers();
+            var users = await repo.GetUsers().ConfigureAwait(false);
             return View(users);
         }
 
@@ -23,7 +23,7 @@ namespace CRUDAsync.Controllers
         public async Task<ActionResult> Details(int id)
         {
             var repo = new UserRepository(dbName);
-            var user = await repo.GetUserById(id);
+            var user = await repo.GetUserById(id).ConfigureAwait(false);
             return View(user);
         }
 
