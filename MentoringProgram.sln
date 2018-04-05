@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopApp", "Async I Await\Sh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopRepository", "Async I Await\ShopRepository\ShopRepository.csproj", "{B7CC6926-C664-4DAE-84A8-8D1BF6218719}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRUDAsync", "Async I Await\CRUDAsync\CRUDAsync.csproj", "{A68355DB-1E1F-4E40-8F96-60DEC45F3DAB}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Multithreading\SocketHelper\SocketHelper.projitems*{3937fb7b-0d31-4a04-b181-5f0be9fbf17a}*SharedItemsImports = 4
@@ -82,6 +84,10 @@ Global
 		{B7CC6926-C664-4DAE-84A8-8D1BF6218719}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7CC6926-C664-4DAE-84A8-8D1BF6218719}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7CC6926-C664-4DAE-84A8-8D1BF6218719}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A68355DB-1E1F-4E40-8F96-60DEC45F3DAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A68355DB-1E1F-4E40-8F96-60DEC45F3DAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A68355DB-1E1F-4E40-8F96-60DEC45F3DAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A68355DB-1E1F-4E40-8F96-60DEC45F3DAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +109,7 @@ Global
 		{192E1320-1246-4940-B945-EC2F8F0F233F} = {4E1D192C-CE81-40CF-8570-AA006D373C50}
 		{1F194F8F-1ACD-4A51-A871-7F972A544465} = {670AC484-5FB6-46AF-9EAA-02A0BA52A778}
 		{B7CC6926-C664-4DAE-84A8-8D1BF6218719} = {4E1D192C-CE81-40CF-8570-AA006D373C50}
+		{A68355DB-1E1F-4E40-8F96-60DEC45F3DAB} = {192E1320-1246-4940-B945-EC2F8F0F233F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {173C4E00-668C-4A1C-9BE8-3E875543813B}
