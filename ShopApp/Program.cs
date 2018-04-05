@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ShopApp
+namespace ShopApp.Task3
 {
     static class Program
     {

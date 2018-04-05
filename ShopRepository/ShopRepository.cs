@@ -66,10 +66,10 @@ namespace ShopRepository
             {
                 dbConnection.Open();
 
-                //string sqlCreate = "CREATE TABLE Users (id INTEGER PRIMARY KEY AUTOINCREMENT, name NVARCHAR(20), surname NVARCHAR(200), age INTEGER)";
+                string sqlCreate = "CREATE TABLE Users (id INTEGER PRIMARY KEY AUTOINCREMENT, name NVARCHAR(20), surname NVARCHAR(200), age INTEGER)";
 
-                //var createCommand = new SQLiteCommand(sqlCreate, dbConnection);
-                //createCommand.ExecuteNonQuery();
+                var createCommand = new SQLiteCommand(sqlCreate, dbConnection);
+                createCommand.ExecuteNonQuery();
 
                 var sb = new StringBuilder();
                 sb.Append("INSERT INTO Users (name, surname, age) VALUES");
@@ -86,19 +86,6 @@ namespace ShopRepository
                 var sqlInsert = sb.ToString();
                 var insertCommand = new SQLiteCommand(sqlInsert, dbConnection);
                 insertCommand.ExecuteNonQuery();
-            }
-        }
-
-        public void CreateOrderTable()
-        {
-            using (var dbConnection = new SQLiteConnection(connectionString))
-            {
-                dbConnection.Open();
-
-                string sqlCreate = "CREATE TABLE Orders (id INTEGER PRIMARY KEY AUTOINCREMENT, productId INTEGER, userId INTEGER)";
-
-                var createCommand = new SQLiteCommand(sqlCreate, dbConnection);
-                createCommand.ExecuteNonQuery();
             }
         }
     }

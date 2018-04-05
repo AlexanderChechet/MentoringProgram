@@ -46,8 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Orders\Order.cs" />
-    <Compile Include="Orders\OrderRepository.cs" />
     <Compile Include="Products\Product.cs" />
     <Compile Include="Products\ProductRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
