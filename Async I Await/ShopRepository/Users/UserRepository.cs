@@ -23,17 +23,21 @@ namespace ShopRepository.Users
                 User user;
                 await dbConnection.OpenAsync();
                 var sqlSelect = "SELECT id, name, surname, age FROM Users WHERE id = @Id";
-                var command = new SQLiteCommand(sqlSelect, dbConnection);
-                command.Parameters.Add(new SQLiteParameter("@Id", id));
-                var reader = await command.ExecuteReaderAsync();
-                if (await reader.ReadAsync())
+                using (var command = new SQLiteCommand(sqlSelect, dbConnection))
                 {
-                    user = new User();
-                    user.Id = reader.GetInt32(0);
-                    user.Name = reader.GetString(1);
-                    user.Surname = reader.GetString(2);
-                    user.Age = reader.GetInt32(3);
-                    return user;
+                    command.Parameters.Add(new SQLiteParameter("@Id", id));
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            user = new User();
+                            user.Id = reader.GetInt32(0);
+                            user.Name = reader.GetString(1);
+                            user.Surname = reader.GetString(2);
+                            user.Age = reader.GetInt32(3);
+                            return user;
+                        }
+                    }
                 }
             }
             return null;
@@ -46,18 +50,22 @@ namespace ShopRepository.Users
                 List<User> result = new List<User>();
                 await dbConnection.OpenAsync().ConfigureAwait(false);
                 var sqlSelect = "SELECT id, name, surname, age FROM Users";
-                var command = new SQLiteCommand(sqlSelect, dbConnection);
-                var reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
-                while (await reader.ReadAsync().ConfigureAwait(false))
+                using (var command = new SQLiteCommand(sqlSelect, dbConnection))
                 {
-                    var user = new User();
-                    user.Id = reader.GetInt32(0);
-                    user.Name = reader.GetString(1);
-                    user.Surname = reader.GetString(2);
-                    user.Age = reader.GetInt32(3);
-                    result.Add(user);
+                    using (var reader = await command.ExecuteReaderAsync().ConfigureAwait(false))
+                    {
+                        while (await reader.ReadAsync().ConfigureAwait(false))
+                        {
+                            var user = new User();
+                            user.Id = reader.GetInt32(0);
+                            user.Name = reader.GetString(1);
+                            user.Surname = reader.GetString(2);
+                            user.Age = reader.GetInt32(3);
+                            result.Add(user);
+                        }
+                        return result;
+                    }
                 }
-                return result;
             }
         }
 
@@ -66,12 +74,46 @@ namespace ShopRepository.Users
             using (var dbConnection = new SQLiteConnection(connectionString))
             {
                 await dbConnection.OpenAsync();
-                var sqlInsert = "INSER INTO Users (name, surname, age) VALUES (@Name, @Surname, @Age)";
-                var command = new SQLiteCommand(sqlInsert, dbConnection);
-                command.Parameters.Add(new SQLiteParameter("@Name", user.Name));
-                command.Parameters.Add(new SQLiteParameter("@Surname", user.Surname));
-                command.Parameters.Add(new SQLiteParameter("@Age", user.Age));
-                await command.ExecuteNonQueryAsync();
+                var sqlInsert = "INSERT INTO Users (name, surname, age) VALUES (@Name, @Surname, @Age)";
+                using (var command = new SQLiteCommand(sqlInsert, dbConnection))
+                {
+                    command.Parameters.Add(new SQLiteParameter("@Name", user.Name));
+                    command.Parameters.Add(new SQLiteParameter("@Surname", user.Surname));
+                    command.Parameters.Add(new SQLiteParameter("@Age", user.Age));
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public async Task EditUser(User user)
+        {
+            using (var dbConnection = new SQLiteConnection(connectionString))
+            {
+                await dbConnection.OpenAsync();
+                var sqlUpdate = "UPDATE Users SET name = @Name, surname = @Surname, age = @Age WHERE id = @Id";
+                using (var command = new SQLiteCommand(sqlUpdate, dbConnection))
+                {
+
+                    command.Parameters.Add(new SQLiteParameter("@Id", user.Id));
+                    command.Parameters.Add(new SQLiteParameter("@Name", user.Name));
+                    command.Parameters.Add(new SQLiteParameter("@Surname", user.Surname));
+                    command.Parameters.Add(new SQLiteParameter("@Age", user.Age));
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public async Task DeleteUser(int id)
+        {
+            using (var dbConnection = new SQLiteConnection(connectionString))
+            {
+                await dbConnection.OpenAsync();
+                var sqlUpdate = "DELETE FROM Users WHERE id = @Id";
+                using (var command = new SQLiteCommand(sqlUpdate, dbConnection))
+                {
+                    command.Parameters.Add(new SQLiteParameter("@Id", id));
+                    await command.ExecuteNonQueryAsync();
+                }
             }
         }
     }

@@ -35,61 +35,78 @@ namespace CRUDAsync.Controllers
 
         // POST: User/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public async Task<ActionResult> Create(FormCollection collection)
         {
             try
             {
-                // TODO: Add insert logic here
-
+                var user = new User();
+                user.Name = collection["Name"];
+                user.Surname = collection["Surname"];
+                user.Age = int.Parse(collection["Age"]);
+                var repo = new UserRepository(dbName);
+                await repo.AddUser(user).ConfigureAwait(false);
                 return RedirectToAction("Index");
             }
-            catch
+            catch(Exception e)
             {
                 return View();
             }
         }
 
         // GET: User/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var repo = new UserRepository(dbName);
+            var user = await repo.GetUserById(id).ConfigureAwait(false);
+            return View(user);
         }
 
         // POST: User/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public async Task<ActionResult> Edit(int id, FormCollection collection)
         {
             try
             {
-                // TODO: Add update logic here
-
+                var user = new User();
+                user.Id = id;
+                user.Name = collection["Name"];
+                user.Surname = collection["Surname"];
+                user.Age = int.Parse(collection["Age"]);
+                var repo = new UserRepository(dbName);
+                await repo.EditUser(user).ConfigureAwait(false);
                 return RedirectToAction("Index");
             }
-            catch
+            catch(Exception e)
             {
-                return View();
+                var repo = new UserRepository(dbName);
+                var user = await repo.GetUserById(id).ConfigureAwait(false);
+                return View(user);
             }
         }
 
         // GET: User/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View();
+            var repo = new UserRepository(dbName);
+            var user = await repo.GetUserById(id).ConfigureAwait(false);
+            return View(user);
         }
 
         // POST: User/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public async Task<ActionResult> Delete(int id, FormCollection collection)
         {
             try
             {
-                // TODO: Add delete logic here
-
+                var repo = new UserRepository(dbName);
+                await repo.DeleteUser(id).ConfigureAwait(false);
                 return RedirectToAction("Index");
             }
-            catch
+            catch(Exception e)
             {
-                return View();
+                var repo = new UserRepository(dbName);
+                var user = await repo.GetUserById(id).ConfigureAwait(false);
+                return View(user);
             }
         }
     }
