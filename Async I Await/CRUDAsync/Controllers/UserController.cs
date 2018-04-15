@@ -1,29 +1,26 @@
-﻿using ShopRepository.Users;
+﻿using Service.Users;
+using Model.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace CRUDAsync.Controllers
 {
     public class UserController : Controller
     {
-        private string dbName = "ShopDb.sqlite";
         // GET: User
         public async Task<ActionResult> Index()
         {
-            var repo = new UserRepository(dbName);
-            var users = await repo.GetUsers().ConfigureAwait(false);
+            var service = new UserService();
+            var users = await service.GetUsers().ConfigureAwait(false);
             return View(users);
         }
 
         // GET: User/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            var repo = new UserRepository(dbName);
-            var user = await repo.GetUserById(id).ConfigureAwait(false);
+            var service = new UserService();
+            var user = await service.GetUserById(id).ConfigureAwait(false);
             return View(user);
         }
 
@@ -43,8 +40,8 @@ namespace CRUDAsync.Controllers
                 user.Name = collection["Name"];
                 user.Surname = collection["Surname"];
                 user.Age = int.Parse(collection["Age"]);
-                var repo = new UserRepository(dbName);
-                await repo.AddUser(user).ConfigureAwait(false);
+                var service = new UserService();
+                await service.AddUser(user).ConfigureAwait(false);
                 return RedirectToAction("Index");
             }
             catch(Exception e)
@@ -56,8 +53,8 @@ namespace CRUDAsync.Controllers
         // GET: User/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var repo = new UserRepository(dbName);
-            var user = await repo.GetUserById(id).ConfigureAwait(false);
+            var service = new UserService();
+            var user = await service.GetUserById(id).ConfigureAwait(false);
             return View(user);
         }
 
@@ -72,14 +69,14 @@ namespace CRUDAsync.Controllers
                 user.Name = collection["Name"];
                 user.Surname = collection["Surname"];
                 user.Age = int.Parse(collection["Age"]);
-                var repo = new UserRepository(dbName);
-                await repo.EditUser(user).ConfigureAwait(false);
+                var service = new UserService();
+                await service.EditUser(user).ConfigureAwait(false);
                 return RedirectToAction("Index");
             }
             catch(Exception e)
             {
-                var repo = new UserRepository(dbName);
-                var user = await repo.GetUserById(id).ConfigureAwait(false);
+                var service = new UserService();
+                var user = await service.GetUserById(id).ConfigureAwait(false);
                 return View(user);
             }
         }
@@ -87,8 +84,8 @@ namespace CRUDAsync.Controllers
         // GET: User/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
-            var repo = new UserRepository(dbName);
-            var user = await repo.GetUserById(id).ConfigureAwait(false);
+            var service = new UserService();
+            var user = await service.GetUserById(id).ConfigureAwait(false);
             return View(user);
         }
 
@@ -98,14 +95,14 @@ namespace CRUDAsync.Controllers
         {
             try
             {
-                var repo = new UserRepository(dbName);
-                await repo.DeleteUser(id).ConfigureAwait(false);
+                var service = new UserService();
+                await service.DeleteUser(id).ConfigureAwait(false);
                 return RedirectToAction("Index");
             }
             catch(Exception e)
             {
-                var repo = new UserRepository(dbName);
-                var user = await repo.GetUserById(id).ConfigureAwait(false);
+                var service = new UserService();
+                var user = await service.GetUserById(id).ConfigureAwait(false);
                 return View(user);
             }
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Model.Entities;
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
@@ -7,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace ShopRepository.Users
 {
-    public class UserRepository
+    public class SQLiteUserRepository : IUserRepository
     {
         private string connectionString;
 
-        public UserRepository(string name)
+        public SQLiteUserRepository(string name)
         {
             connectionString = $"Data Source={name};Version=3;"; ;
         }

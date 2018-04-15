@@ -1,11 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MapperGenerator
 {
@@ -26,8 +22,8 @@ namespace MapperGenerator
             var initDestination = Expression.Assign(destination, Expression.New(typeof(TDestination)));
 
             bodyList.Add(initDestination);
-            bodyList.AddRange(CompareFields<TSource, TDestination>(sourceParam, destination));
-            bodyList.AddRange(CompareProperties<TSource, TDestination>(sourceParam, destination));
+            bodyList.AddRange(GetFieldMapExpressions<TSource, TDestination>(sourceParam, destination));
+            bodyList.AddRange(GetPropertyMapExpressions<TSource, TDestination>(sourceParam, destination));
 
             var destinationLabel = Expression.Label(typeof(TDestination));
             var returnLabel = Expression.Label(destinationLabel, destination);
@@ -36,7 +32,7 @@ namespace MapperGenerator
             return Expression.Block(new[] { destination }, bodyList);
         }
 
-        private List<Expression> CompareFields<TSource, TDestination>(Expression source, Expression destination)
+        private List<Expression> GetFieldMapExpressions<TSource, TDestination>(Expression source, Expression destination)
         {
             var result = new List<Expression>();
             var sourceFields = typeof(TSource).GetFields();
@@ -54,7 +50,7 @@ namespace MapperGenerator
             return result;
         }
 
-        private List<Expression> CompareProperties<TSource, TDestination>(Expression source, Expression destination)
+        private List<Expression> GetPropertyMapExpressions<TSource, TDestination>(Expression source, Expression destination)
         {
             var result = new List<Expression>();
             var sourceProperties = typeof(TSource).GetProperties();
@@ -63,7 +59,7 @@ namespace MapperGenerator
             for (int i = 0; i < sourceProperties.Length; i++)
             {
                 if (!destinationProperties.Contains(sourceProperties[i], comparer))
-                    throw new ArgumentException("Destination object doesn't has field " + sourceProperties[i].Name);
+                    throw new ArgumentException("Destination object doesn't has property " + sourceProperties[i].Name);
                 var destinationPropertyInfo = destinationProperties.First(x => comparer.Equals(x, sourceProperties[i]));
                 result.Add(Expression.Assign(
                     Expression.Property(destination, destinationPropertyInfo),

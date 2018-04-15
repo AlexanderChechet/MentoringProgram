@@ -1,34 +1,31 @@
-﻿using ShopRepository.Products;
+﻿using Model.Entities;
+using ShopRepository.Products;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ShopApp.Task3
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         public List<Product> basketItems;
 
-        private ProductRepository productRepository;
+        private SQLiteProductRepository productRepository;
         private const string DbName = "ShopDb.sqlite";
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
-            productRepository = new ProductRepository(DbName);
+            productRepository = new SQLiteProductRepository(DbName);
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private async void MainForm_Load(object sender, EventArgs e)
         {
             basketItems = new List<Product>();
             var sr = new ShopRepository.ShopRepository(DbName);
-            var products = productRepository.GetProducts();
+            var products = await productRepository.GetProducts();
             int i = 0;
             foreach (var product in products)
             {
@@ -49,7 +46,7 @@ namespace ShopApp.Task3
 
         private async Task<int> AddToBasket(int productId)
         {
-            var product = productRepository.GetProductById(productId);
+            var product = await productRepository.GetProductById(productId);
             basketItems.Add(product);
             var result = basketItems.Sum(x => x.Cost);
             return result;
