@@ -10,7 +10,14 @@ namespace E3SLinqProvider
     {
         static void Main(string[] args)
         {
-            PrintEmployees();
+            try
+            {
+                PrintEmployees();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
             Console.ReadKey();
         }
 
