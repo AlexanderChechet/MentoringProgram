@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using E3SLinqProvider.E3SClient;
+using E3SLinqProvider.E3SClient.Entities;
+using System;
+using System.Configuration;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace E3SLinqProvider
 {
@@ -10,6 +10,18 @@ namespace E3SLinqProvider
     {
         static void Main(string[] args)
         {
+            PrintEmployees();
+            Console.ReadKey();
+        }
+
+        public static void PrintEmployees()
+        {
+            var employees = new E3SEntitySet<EmployeeEntity>(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
+
+            foreach (var emp in employees.Where(e => e.workStation.StartsWith("EPBYMINW") && e.project.Contains("EARD")))
+            {
+                Console.WriteLine("{0} {1} {2} {3}", emp.nativeName, emp.workStation, emp.primarySkill, emp.project);
+            }
         }
     }
 }
