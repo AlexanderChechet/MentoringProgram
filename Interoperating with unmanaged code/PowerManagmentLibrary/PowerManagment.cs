@@ -21,7 +21,9 @@ namespace PowerManagmentLibrary
             var status = CallNtPowerInformation((int)PowerInformationLevel.LastSleepTime, IntPtr.Zero, (uint)0, ptr, (uint)8);
             if (status == 0)
             {
-                return Marshal.PtrToStructure<ulong>(ptr);
+                ulong result = Marshal.PtrToStructure<ulong>(ptr);
+                Marshal.FreeHGlobal(ptr);
+                return result;
             }
             throw new Exception($"Error in function call. Status code = {status:X}");
         }
@@ -33,7 +35,9 @@ namespace PowerManagmentLibrary
             var status = CallNtPowerInformation((int)PowerInformationLevel.LastWakeTime, IntPtr.Zero, (uint)0, ptr, (uint)8);
             if (status == 0)
             {
-                return Marshal.PtrToStructure<ulong>(ptr);
+                ulong result = Marshal.PtrToStructure<ulong>(ptr);
+                Marshal.FreeHGlobal(ptr);
+                return result;
             }
             throw new Exception($"Error in function call. Status code = {status:X}");
         }
@@ -46,6 +50,7 @@ namespace PowerManagmentLibrary
             if (status == 0)
             {
                 var info = Marshal.PtrToStructure<SYSTEM_POWER_INFORMATION>(ptr);
+                Marshal.FreeHGlobal(ptr);
                 return info;
             }
             throw new Exception($"Error in function call. Status code = {status:X}");
@@ -59,6 +64,7 @@ namespace PowerManagmentLibrary
             if (status == 0)
             {
                 var state = Marshal.PtrToStructure<SYSTEM_BATTERY_STATE>(ptr);
+                Marshal.FreeHGlobal(ptr);
                 return state;
             }
             throw new Exception($"Error in function call. Status code = {status:X}");
@@ -70,6 +76,7 @@ namespace PowerManagmentLibrary
             IntPtr ptr = Marshal.AllocHGlobal(size);
             Marshal.StructureToPtr<Boolean>(true, ptr, true);
             var status = CallNtPowerInformation((int)PowerInformationLevel.SystemReserveHiberFile, ptr, (uint)size, IntPtr.Zero, (uint)0);
+            Marshal.FreeHGlobal(ptr);
             if (status != 0)
                 throw new Exception($"Error in function call. Status code = {status:X}");
         }
@@ -80,6 +87,7 @@ namespace PowerManagmentLibrary
             IntPtr ptr = Marshal.AllocHGlobal(size);
             Marshal.StructureToPtr<Boolean>(false, ptr, true);
             var status = CallNtPowerInformation((int)PowerInformationLevel.SystemReserveHiberFile, ptr, (uint)size, IntPtr.Zero, (uint)0);
+            Marshal.FreeHGlobal(ptr);
             if (status != 0)
                 throw new Exception($"Error in function call. Status code = {status:X}");
         }
