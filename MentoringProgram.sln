@@ -67,6 +67,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSS from XML Transformation
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HTML from XML Report Creation", "Advanced XML\HTML from XML Report Creation\HTML from XML Report Creation.csproj", "{20F485F8-D754-4C63-836F-AE390ABE85E0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows Services", "Windows Services", "{4823F4F8-2D23-4A1D-85C5-63C5D72828E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentCreatorService", "Windows Services\DocumentCreatorService\DocumentCreatorService.csproj", "{55137BA2-3809-43C0-AA28-3D688FD39B10}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Multithreading\SocketHelper\SocketHelper.projitems*{3937fb7b-0d31-4a04-b181-5f0be9fbf17a}*SharedItemsImports = 4
@@ -154,6 +158,10 @@ Global
 		{20F485F8-D754-4C63-836F-AE390ABE85E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20F485F8-D754-4C63-836F-AE390ABE85E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20F485F8-D754-4C63-836F-AE390ABE85E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55137BA2-3809-43C0-AA28-3D688FD39B10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55137BA2-3809-43C0-AA28-3D688FD39B10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55137BA2-3809-43C0-AA28-3D688FD39B10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55137BA2-3809-43C0-AA28-3D688FD39B10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -186,6 +194,7 @@ Global
 		{E5EE9FE8-9E50-47C1-A8D8-DA5333BA022B} = {C628660F-B77A-49C3-BB8B-7B568F2C4435}
 		{E78BDCBB-6AF7-418F-AB78-D460A4451141} = {C628660F-B77A-49C3-BB8B-7B568F2C4435}
 		{20F485F8-D754-4C63-836F-AE390ABE85E0} = {C628660F-B77A-49C3-BB8B-7B568F2C4435}
+		{55137BA2-3809-43C0-AA28-3D688FD39B10} = {4823F4F8-2D23-4A1D-85C5-63C5D72828E9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {173C4E00-668C-4A1C-9BE8-3E875543813B}
