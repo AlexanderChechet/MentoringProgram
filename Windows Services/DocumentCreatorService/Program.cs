@@ -11,9 +11,10 @@ namespace DocumentCreatorService
     {
         static void Main(string[] args)
         {
-            var files = PdfCreatorService.CheckFolder();
-            PdfCreatorService.ProcessFiles(files);
-
+            Console.WriteLine("Started");
+            var service = new PdfCreatorService();
+            service.Handler();
+            Console.ReadKey();
             /*HostFactory.Run(
                 x => {
                     x.Service<PdfCreatorService>();

@@ -3,11 +3,12 @@ using MigraDoc.Rendering;
 using PdfSharp;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
+using System;
 using System.Drawing;
 
 namespace DocumentCreatorService
 {
-    public class PdfCreator
+    public class PdfCreator : IDisposable
     {
         PdfDocument document;
         public PdfCreator()
@@ -15,15 +16,22 @@ namespace DocumentCreatorService
             this.document = new PdfDocument();
         }
 
-        public void AddImage(string path)
+        public void AddImage(Image image)
         {
             PdfPage page = this.document.AddPage();
-            var grx = XGraphics.FromPdfPage(page);
-            var image = Image.FromFile(path);
-            using (var xImage = XImage.FromGdiPlusImage(ImageHelper.ResizeImage(image)))
+            using (var grx = XGraphics.FromPdfPage(page))
             {
-                grx.DrawImage(xImage, 0, 0);
+                using (var xImage = XImage.FromGdiPlusImage(ImageHelper.ResizeImage(image)))
+                {
+                    grx.DrawImage(xImage, 0, 0);
+                }
             }
+        }
+
+        public void Dispose()
+        {
+            if (this.document != null)
+                this.document.Close();
         }
 
         public void Save(string filename)
