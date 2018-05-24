@@ -11,11 +11,7 @@ namespace DocumentCreatorService
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Started");
-            var service = new PdfCreatorService();
-            service.Handler();
-            Console.ReadKey();
-            /*HostFactory.Run(
+            HostFactory.Run(
                 x => {
                     x.Service<PdfCreatorService>();
                     x.SetServiceName("PdfCreatorService");
@@ -23,7 +19,7 @@ namespace DocumentCreatorService
                     x.SetDisplayName("PdfCreatorService");
                     x.StartAutomaticallyDelayed();
                     x.RunAsLocalService();
-                    });*/
+                    });
         }
     }
 }

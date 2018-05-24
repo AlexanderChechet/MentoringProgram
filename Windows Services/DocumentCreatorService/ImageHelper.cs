@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DocumentCreatorService
 {
-    public class ImageHelper
+    public static class ImageHelper
     {
         private static double maxWidth = 800;
         private static double maxHeight = 500;

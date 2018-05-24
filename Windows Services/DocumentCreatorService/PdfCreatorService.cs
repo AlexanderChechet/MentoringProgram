@@ -1,34 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using Topshelf;
 
 namespace DocumentCreatorService
 {
-    public class PdfCreatorService /*: ServiceControl*/
+    public class PdfCreatorService : ServiceControl
     {
-        private int counter;
-        private FileSequenceProcessor fileSequenceProcessor;
+        private readonly FileSequenceProcessor fileSequenceProcessor;
+        private readonly Timer timer;
 
-        /*public bool Start(HostControl hostControl)
+        public PdfCreatorService()
         {
+            timer = new Timer(Handler);
             fileSequenceProcessor = new FileSequenceProcessor();
-            counter = int.MinValue;
+        }
+
+        public bool Start(HostControl hostControl)
+        {
+            timer.Change(0, 10000);
             return true;
         }
 
         public bool Stop(HostControl hostControl)
         {
+            timer.Change(Timeout.Infinite, 0);
+            fileSequenceProcessor.ProcessUnfinishedSequence();
             return true;
-        }*/
+        }
 
-        public void Handler()
+        private void Handler(object obj)
         {
-            fileSequenceProcessor = new FileSequenceProcessor();
+            int count = fileSequenceProcessor.Counter;
             fileSequenceProcessor.ProcessFolder();
+            if (count == fileSequenceProcessor.Counter)
+                fileSequenceProcessor.ProcessUnfinishedSequence();
         }
 
         

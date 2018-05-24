@@ -3,28 +3,28 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace DocumentCreatorService
 {
     public class FileSequenceProcessor
     {
         private List<string> sequence;
-        private int counter;
+        
         private int pdfCounter;
-        private List<string> processList;
+        
         private const string CORUPTED_FOLDER_PATH = @"C:\ServiceCoruptedFiles\";
         private const string OUTPUT_FOLDER_PATH = @"C:\ServicePdfs\";
         private const string INPUT_FOLDER_PATH = @"C:\ServiceImages\";
         private const string PREFIX = "img";
 
-        private string inputFolder;
-        private string outputFolder;
-        private string coruptedFolder;
-        private string prefix;
+        private readonly List<string> processList;
+        private readonly string inputFolder;
+        private readonly string outputFolder;
+        private readonly string coruptedFolder;
+        private readonly string prefix;
 
+
+        public int Counter { get; set; }
 
         public FileSequenceProcessor(string prefix = PREFIX, string inputFolder = INPUT_FOLDER_PATH, string outputFolder = OUTPUT_FOLDER_PATH, string coruptedFolder = CORUPTED_FOLDER_PATH)
         {
@@ -33,7 +33,7 @@ namespace DocumentCreatorService
             this.coruptedFolder = coruptedFolder;
             this.prefix = prefix;
             this.pdfCounter = 1;
-            this.counter = int.MinValue;
+            Counter = int.MinValue;
             processList = new List<string>();
         }
 
@@ -58,7 +58,7 @@ namespace DocumentCreatorService
                         if (!int.TryParse(nameSplit[1], out number))
                             continue;
 
-                        if (number - counter == 1)
+                        if (number - Counter == 1)
                         {
                             sequence.Add(file);
                         }
@@ -69,9 +69,19 @@ namespace DocumentCreatorService
                             sequence = new List<string>();
                             sequence.Add(file);
                         }
-                        counter = number;
+                        Counter = number;
                     }
                 }
+            }
+        }
+
+        public void ProcessUnfinishedSequence()
+        {
+            if (sequence != null && sequence.Count > 0)
+            {
+                ProcessSequence(sequence);
+                sequence = new List<string>();
+                Counter = int.MinValue;
             }
         }
 
@@ -91,15 +101,15 @@ namespace DocumentCreatorService
                     pdfCreator.Save($"{outputFolder}doc_{pdfCounter++}.pdf");
                 }
             }
-            catch (IOException e)
+            catch (IOException)
             {
-                // some troubles with file system
+                throw;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 CopyCoruptedFiles(files);
             }
-            files.ForEach(x => File.Delete(x));
+            files.ForEach(File.Delete);
         }
 
         private Image ProcessImage(string path)

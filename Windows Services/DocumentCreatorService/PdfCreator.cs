@@ -1,7 +1,4 @@
-﻿using MigraDoc.DocumentObjectModel;
-using MigraDoc.Rendering;
-using PdfSharp;
-using PdfSharp.Drawing;
+﻿using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using System;
 using System.Drawing;
@@ -10,7 +7,7 @@ namespace DocumentCreatorService
 {
     public class PdfCreator : IDisposable
     {
-        PdfDocument document;
+        readonly PdfDocument document;
         public PdfCreator()
         {
             this.document = new PdfDocument();
@@ -30,8 +27,7 @@ namespace DocumentCreatorService
 
         public void Dispose()
         {
-            if (this.document != null)
-                this.document.Close();
+            document?.Close();
         }
 
         public void Save(string filename)
