@@ -5,23 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using Topshelf;
 
-namespace DocumentCreatorService
+namespace DocumentCentralService
 {
     class Program
     {
         static void Main(string[] args)
         {
-            var service = new PdfCreatorService();
+            var service = new PdfCentralService();
             service.Start();
             /*HostFactory.Run(
                 x => {
-                    x.Service<PdfCreatorService>();
-                    x.SetServiceName("PdfCreatorService");
-                    x.SetDescription("Create Pdf document from images");
-                    x.SetDisplayName("PdfCreatorService");
+                    x.Service<PdfCentralService>();
+                    x.SetServiceName("PdfCentralService");
+                    x.SetDescription("Central service for Pdf documents");
+                    x.SetDisplayName("PdfCentralService");
                     x.StartAutomaticallyDelayed();
                     x.RunAsLocalService();
-                    });*/
+                });*/
         }
     }
 }

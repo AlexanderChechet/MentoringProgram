@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Multithreading", "Multithreading", "{93154CAD-0952-4DA8-ACB7-E6E8DF3F4E05}"
 EndProject
@@ -70,6 +70,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows Services", "Windows Services", "{4823F4F8-2D23-4A1D-85C5-63C5D72828E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentCreatorService", "Windows Services\DocumentCreatorService\DocumentCreatorService.csproj", "{55137BA2-3809-43C0-AA28-3D688FD39B10}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Message Queues", "Message Queues", "{2CB601C2-88F9-419D-8AAE-DABE3151F37A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQHelper", "MessageQueues\RabbitMQ\RabbitMQHelper.csproj", "{D6A37FFA-A3E1-4441-AFEF-EAC934A51EDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{B7F871E7-5F7A-4FE6-B3A0-ECD5E569FBFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentCentralService", "Windows Services\DocumentCentralService\DocumentCentralService.csproj", "{5654A94A-00D5-4034-B36E-CF91EC6DD6DF}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -162,6 +170,18 @@ Global
 		{55137BA2-3809-43C0-AA28-3D688FD39B10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55137BA2-3809-43C0-AA28-3D688FD39B10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55137BA2-3809-43C0-AA28-3D688FD39B10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6A37FFA-A3E1-4441-AFEF-EAC934A51EDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6A37FFA-A3E1-4441-AFEF-EAC934A51EDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6A37FFA-A3E1-4441-AFEF-EAC934A51EDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6A37FFA-A3E1-4441-AFEF-EAC934A51EDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7F871E7-5F7A-4FE6-B3A0-ECD5E569FBFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7F871E7-5F7A-4FE6-B3A0-ECD5E569FBFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7F871E7-5F7A-4FE6-B3A0-ECD5E569FBFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7F871E7-5F7A-4FE6-B3A0-ECD5E569FBFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5654A94A-00D5-4034-B36E-CF91EC6DD6DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5654A94A-00D5-4034-B36E-CF91EC6DD6DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5654A94A-00D5-4034-B36E-CF91EC6DD6DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5654A94A-00D5-4034-B36E-CF91EC6DD6DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -195,6 +215,8 @@ Global
 		{E78BDCBB-6AF7-418F-AB78-D460A4451141} = {C628660F-B77A-49C3-BB8B-7B568F2C4435}
 		{20F485F8-D754-4C63-836F-AE390ABE85E0} = {C628660F-B77A-49C3-BB8B-7B568F2C4435}
 		{55137BA2-3809-43C0-AA28-3D688FD39B10} = {4823F4F8-2D23-4A1D-85C5-63C5D72828E9}
+		{D6A37FFA-A3E1-4441-AFEF-EAC934A51EDE} = {2CB601C2-88F9-419D-8AAE-DABE3151F37A}
+		{5654A94A-00D5-4034-B36E-CF91EC6DD6DF} = {4823F4F8-2D23-4A1D-85C5-63C5D72828E9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {173C4E00-668C-4A1C-9BE8-3E875543813B}

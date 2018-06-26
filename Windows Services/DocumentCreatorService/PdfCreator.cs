@@ -2,6 +2,7 @@
 using PdfSharp.Pdf;
 using System;
 using System.Drawing;
+using System.IO;
 
 namespace DocumentCreatorService
 {
@@ -30,9 +31,15 @@ namespace DocumentCreatorService
             document?.Close();
         }
 
-        public void Save(string filename)
+        public byte[] GetDocument()
         {
-            this.document.Save(filename);
+            byte[] result = null;
+            using (var ms = new MemoryStream())
+            {
+                this.document.Save(ms, true);
+                result = ms.ToArray();
+            }
+            return result;
         }
     }
 }

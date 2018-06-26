@@ -10,35 +10,30 @@ namespace DocumentCreatorService
     {
         private List<string> sequence;
         
-        private int pdfCounter;
-        
         private const string CORUPTED_FOLDER_PATH = @"C:\ServiceCoruptedFiles\";
-        private const string OUTPUT_FOLDER_PATH = @"C:\ServicePdfs\";
         private const string INPUT_FOLDER_PATH = @"C:\ServiceImages\";
         private const string PREFIX = "img";
 
         private readonly List<string> processList;
         private readonly string inputFolder;
-        private readonly string outputFolder;
         private readonly string coruptedFolder;
         private readonly string prefix;
 
 
         public int Counter { get; set; }
 
-        public FileSequenceProcessor(string prefix = PREFIX, string inputFolder = INPUT_FOLDER_PATH, string outputFolder = OUTPUT_FOLDER_PATH, string coruptedFolder = CORUPTED_FOLDER_PATH)
+        public FileSequenceProcessor(string prefix = PREFIX, string inputFolder = INPUT_FOLDER_PATH, string coruptedFolder = CORUPTED_FOLDER_PATH)
         {
             this.inputFolder = inputFolder;
-            this.outputFolder = outputFolder;
             this.coruptedFolder = coruptedFolder;
             this.prefix = prefix;
-            this.pdfCounter = 1;
             Counter = int.MinValue;
             processList = new List<string>();
         }
 
-        public void ProcessFolder()
+        public byte[] ProcessFolder()
         {
+            byte[] result = null;
             if (Directory.Exists(inputFolder))
             {
                 var files = Directory.GetFiles(inputFolder);
@@ -65,7 +60,7 @@ namespace DocumentCreatorService
                         else
                         {
                             if (sequence != null)
-                                ProcessSequence(sequence);
+                                result = ProcessSequence(sequence);
                             sequence = new List<string>();
                             sequence.Add(file);
                         }
@@ -73,20 +68,24 @@ namespace DocumentCreatorService
                     }
                 }
             }
+            return result;
         }
 
-        public void ProcessUnfinishedSequence()
+        public byte[] ProcessUnfinishedSequence()
         {
+            byte[] result = null;
             if (sequence != null && sequence.Count > 0)
             {
-                ProcessSequence(sequence);
+                result = ProcessSequence(sequence);
                 sequence = new List<string>();
                 Counter = int.MinValue;
             }
+            return result;
         }
 
-        private void ProcessSequence(List<string> files)
+        private byte[] ProcessSequence(List<string> files)
         {
+            byte[] result;
             try
             {
                 using (var pdfCreator = new PdfCreator())
@@ -98,7 +97,7 @@ namespace DocumentCreatorService
                             pdfCreator.AddImage(image);
                         }
                     }
-                    pdfCreator.Save($"{outputFolder}doc_{pdfCounter++}.pdf");
+                    result = pdfCreator.GetDocument();
                 }
             }
             catch (IOException)
@@ -108,8 +107,10 @@ namespace DocumentCreatorService
             catch (Exception)
             {
                 CopyCoruptedFiles(files);
+                return null;
             }
             files.ForEach(File.Delete);
+            return result;
         }
 
         private Image ProcessImage(string path)
